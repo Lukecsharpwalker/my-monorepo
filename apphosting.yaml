@@ -1,10 +1,6 @@
 # Settings for Backend (on Cloud Run).
 # See https://firebase.google.com/docs/app-hosting/configure#cloud-run
-root: "projects/ssg-app"
 
-# Optional: Specify the build command if needed
-build:
-  command: "npm run build:ssg-app"
 runConfig:
   minInstances: 0
   # maxInstances: 100
