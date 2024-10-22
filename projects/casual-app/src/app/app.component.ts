@@ -10,4 +10,11 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'casual-app';
+  name(): string {
+    console.log('fire in the hole')
+    return 'ssg-app';
+  }
+  re() {
+    console.log('re')
+  }
 }
