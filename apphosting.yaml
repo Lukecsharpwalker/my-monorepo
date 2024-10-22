@@ -2,6 +2,10 @@
 # See https://firebase.google.com/docs/app-hosting/configure#cloud-run
 
 # Optional: Specify the build command if needed
+handlers:
+  - url: /.*
+    static_files: dist/ssg-app/index.html
+    upload: dist/ssg-app/index.html
 build:
   command: "npm run build:ssg-app"
 runConfig:
