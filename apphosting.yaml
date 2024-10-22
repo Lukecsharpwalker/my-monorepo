@@ -1,6 +1,5 @@
 # Settings for Backend (on Cloud Run).
 # See https://firebase.google.com/docs/app-hosting/configure#cloud-run
-root: ""
 
 # Optional: Specify the build command if needed
 build:
