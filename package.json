@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ssg-app": "node dist/ssg-app/server/server.mjs",
-    "build:ssg-app": "ng build --project ssg-app",
+    "build:ssg-app": "ng build --project ssg-app --output-path=dist",
     "build:casual-app": "ng build --project casual-app"
   },
   "private": true,
