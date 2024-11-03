@@ -1,75 +1,22 @@
-steps:
-  # Step 1: Install dependencies for SSG App
-  - name: 'node:16'
-    id: 'Install dependencies for SSG App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Starting dependency installation for SSG App"
-        npm install
-        echo "Completed dependency installation for SSG App"
-    dir: 'projects/ssg-app'
+# Define multiple backends if needed for each app
+backends:
+  - name: ssg-app-backend
+    root: apps/ssg-app
+    runtime: nodejs14 # Adjust runtime as needed
+    buildCommand: npm run build
+    output: dist/ssg-app # Adjust to match the output directory
 
-  # Step 2: Install dependencies for Angular App
-  - name: 'node:16'
-    id: 'Install dependencies for Angular App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Starting dependency installation for Angular App"
-        npm install
-        echo "Completed dependency installation for Angular App"
-    dir: 'projects/angular-app'
+runConfig:
+  cpu: 1
+  memoryMiB: 512
+  minInstances: 0
+  maxInstances: 1
+  concurrency: 80
 
-  # Step 3: Build SSG App
-  - name: 'node:16'
-    id: 'Build SSG App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Starting build for SSG App"
-        npm run build
-        echo "Completed build for SSG App"
-    dir: 'projects/ssg-app'
-
-  # Step 4: Build Angular App
-  - name: 'node:16'
-    id: 'Build Angular App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Starting build for Angular App"
-        npm run build
-        echo "Completed build for Angular App"
-    dir: 'projects/angular-app'
-
-  # Step 5: Deploy SSG App
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'Deploy SSG App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Deploying SSG App to App Engine or Cloud Run"
-        gcloud app deploy --project=[YOUR_PROJECT_ID] --version=[YOUR_SSG_VERSION] --quiet
-        echo "Deployed SSG App"
-    dir: 'projects/ssg-app'
-
-  # Step 6: Deploy Angular App
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'Deploy Angular App'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Deploying Angular App to App Engine or Cloud Run"
-        gcloud app deploy --project=[YOUR_PROJECT_ID] --version=[YOUR_ANGULAR_VERSION] --quiet
-        echo "Deployed Angular App"
-    dir: 'projects/angular-app'
-
-options:
-  logging: CLOUD_LOGGING_ONLY
+# Global environment variables
+env:
+  - variable: NODE_ENV
+    value: production
+    availability:
+      - BUILD
+      - RUNTIME
