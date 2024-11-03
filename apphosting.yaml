@@ -5,7 +5,6 @@ backends:
     runtime: nodejs20
     buildCommand: ng build ssg-app --output-path=dist/ssg-app
     output: dist/ssg-app # Adjust to match the output directory
-    deployCommand: gcloud app deploy dist/ssg-app/app.yaml --quiet
 
 runConfig:
   cpu: 1
