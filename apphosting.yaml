@@ -2,8 +2,8 @@
 backends:
   - name: ssg-app-backend
     root: apps/ssg-app
-    runtime: nodejs14 # Adjust runtime as needed
-    buildCommand: npm run build
+    runtime: nodejs20
+    buildCommand: ng build ssg-app
     output: dist/ssg-app # Adjust to match the output directory
 
 runConfig:
