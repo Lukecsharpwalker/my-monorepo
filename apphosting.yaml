@@ -8,6 +8,10 @@ handlers:
     upload: dist/ssg-app/index.html
 build:
   command: "npm run build:ssg-app"
+    # Optional: Specify the build directory if it is not the root directory
+  dir: "dist/ssg-app"
+deploy:
+  dir: "dist/ssg-app"
 runConfig:
   minInstances: 0
   # maxInstances: 100
