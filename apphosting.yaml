@@ -1,35 +1,75 @@
-# Settings for Backend (on Cloud Run).
-# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+steps:
+  # Step 1: Install dependencies for SSG App
+  - name: 'node:16'
+    id: 'Install dependencies for SSG App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Starting dependency installation for SSG App"
+        npm install
+        echo "Completed dependency installation for SSG App"
+    dir: 'projects/ssg-app'
 
-# Optional: Specify the build command if needed
-handlers:
-  - url: /.*
-    static_files: dist/ssg-app/index.html
-    upload: dist/ssg-app/index.html
-build:
-  command: "npm run build:ssg-app"
-    # Optional: Specify the build directory if it is not the root directory
-  dir: "dist/ssg-app"
-deploy:
-  dir: "dist/ssg-app"
-runConfig:
-  minInstances: 0
-  # maxInstances: 100
-  # concurrency: 80
-  # cpu: 1
-  # memoryMiB: 512
+  # Step 2: Install dependencies for Angular App
+  - name: 'node:16'
+    id: 'Install dependencies for Angular App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Starting dependency installation for Angular App"
+        npm install
+        echo "Completed dependency installation for Angular App"
+    dir: 'projects/angular-app'
 
-# Environment variables and secrets.
-# env:
-  # Configure environment variables.
-  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
-  # - variable: MESSAGE
-  #   value: Hello world!
-  #   availability:
-  #     - BUILD
-  #     - RUNTIME
+  # Step 3: Build SSG App
+  - name: 'node:16'
+    id: 'Build SSG App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Starting build for SSG App"
+        npm run build
+        echo "Completed build for SSG App"
+    dir: 'projects/ssg-app'
 
-  # Grant access to secrets in Cloud Secret Manager.
-  # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
-  # - variable: MY_SECRET
-  #   secret: mySecretRef
+  # Step 4: Build Angular App
+  - name: 'node:16'
+    id: 'Build Angular App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Starting build for Angular App"
+        npm run build
+        echo "Completed build for Angular App"
+    dir: 'projects/angular-app'
+
+  # Step 5: Deploy SSG App
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Deploy SSG App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Deploying SSG App to App Engine or Cloud Run"
+        gcloud app deploy --project=[YOUR_PROJECT_ID] --version=[YOUR_SSG_VERSION] --quiet
+        echo "Deployed SSG App"
+    dir: 'projects/ssg-app'
+
+  # Step 6: Deploy Angular App
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Deploy Angular App'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Deploying Angular App to App Engine or Cloud Run"
+        gcloud app deploy --project=[YOUR_PROJECT_ID] --version=[YOUR_ANGULAR_VERSION] --quiet
+        echo "Deployed Angular App"
+    dir: 'projects/angular-app'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
