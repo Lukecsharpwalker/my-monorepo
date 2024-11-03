@@ -3,7 +3,6 @@ backends:
   - name: ssg-app-backend
     root: apps/ssg-app
     runtime: nodejs20
-    buildCommand: ng build ssg-app --output-path=dist/ssg-app
     output: dist/ssg-app # Adjust to match the output directory
 
 runConfig:
