@@ -1,9 +1,21 @@
-# Define multiple backends if needed for each app
 backends:
+  # Configuration for SSG application with debug logging
   - name: ssg-app-backend
     root: apps/ssg-app
     runtime: nodejs20
-    output: dist/ssg-app # Adjust to match the output directory
+    # Custom build command with logging to capture the build process
+    buildCommand: |
+      echo "Starting SSG App Build..." &&
+      npm install &&
+      echo "Dependencies installed" &&
+      npm run build:ssg &&
+      echo "SSG App Build Complete" &&
+      mkdir -p dist/debug-logs &&
+      echo "Copying build output to debug logs..." &&
+      cp -r dist/ssg-app dist/debug-logs/ssg-app &&
+      echo "SSG App build output copied to debug logs"
+    output: dist/ssg-app  # Expected output path for Firebase
+
 
 runConfig:
   cpu: 1
@@ -12,10 +24,20 @@ runConfig:
   maxInstances: 1
   concurrency: 80
 
-# Global environment variables
+# Setting global environment variables and verbose logging options
 env:
   - variable: NODE_ENV
     value: production
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: DEBUG
+    value: "*"  # Enables verbose logging in Node.js if apps use a DEBUG-based logging library
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: FIREBASE_VERBOSE
+    value: "1"  # Enables verbose Firebase CLI logs if relevant
     availability:
       - BUILD
       - RUNTIME
