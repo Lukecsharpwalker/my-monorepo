@@ -10,6 +10,9 @@ runConfig:
   concurrency: 80
 
 # Setting global environment variables and verbose logging options
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['deploy', '--project=ssg-app']
 env:
   - variable: NODE_ENV
     value: production
